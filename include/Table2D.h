@@ -22,7 +22,7 @@ public:
 	const Array2D& GetArray() const{return array;}
 	Array2D& GetArray() {return array;}
 	
-	void SetPoint(unsigned nx,unsigned ny, double Val){array.At(nx,ny)=Val;}
+	void SetPoint(unsigned nx,unsigned ny, double Val){array(nx,ny)=Val;}
 private:	
 	Axis axisX,axisY;
 	Array2D array;

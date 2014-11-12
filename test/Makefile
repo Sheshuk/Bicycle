@@ -13,20 +13,22 @@ BCL_LIB=$(BICYCLE_DIR)/lib/libBicycle.a
 # LIBS=-L $(BICYCLE_DIR)/lib -lBicycle 
 LIBS=`root-config --libs`  -lm  -lstdc++
 LIBS+=-lpthread -L /usr/src/gtest -lgtest_main -lgtest 
+ALLTESTS=test_Axis.h test_Table1D.h test_Table2D.h  test_TableIntegrator.h
+TARGET =test_all
 
-TARGETS =test_axis test_Flux2D test_FluxIntegrator
+all: $(TARGET) run
 
-all: $(TARGETS) run
+$(TARGET): $(ALLTESTS)
 
-test_%: test_%.cpp
+%: %.cpp
 	#building test $@ 
 	#deps: $^
 	$(CXX) $(CFLAGS) $(LIBS) -o $@ $^ $(BCL_LIB)
 	strip $@
 
 clean:
-	rm $(TARGETS)
+	rm $(TARGET)
 
-run: $(TARGETS)
-	$(foreach app,$^,./$(app) --gtest_color=yes;)
+run: $(TARGET)
+	./$(TARGET) --gtest_color=yes
 

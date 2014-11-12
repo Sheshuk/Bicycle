@@ -11,14 +11,14 @@
 #include "MRexception.h"
 #include "TableReader.h"
 
-Table2D TableReader::Honda(){
+Table2D TableReader::Honda(const char* path){
     Axis aX(101,0.0,5.0);
     Axis aY(20,0.975,0.025);
     Table2D result(aX,aY);
     
     char fname[100];
     for(auto ny:AxisBins(aY)){
-        sprintf(fname,"cz%02i.mflx",ny+1);
+        sprintf(fname,"%s/cz%02i.mflx",path,ny+1);
         ReadFileHonda(fname,ny,result);
     }
     return result;

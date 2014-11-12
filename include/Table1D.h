@@ -18,7 +18,7 @@ public:
 	const Array1D& GetArray() const{return array;}
 	      Array1D& GetArray()      {return array;}
 	      
-	void SetPoint(unsigned nx, double Val){array.At(nx)=Val;}
+	void SetPoint(unsigned nx, double Val){array(nx)=Val;}
 private:	
 	Axis axisX;
 	Array1D array;
