@@ -9,9 +9,9 @@
 #include "Array2D.h"
 
 #include "MRexception.h"
-#include "TableReader.h"
+#include "TableFactory.h"
 
-Table2D TableReader::Honda(const char* path){
+Table2D TableFactory::Honda(const char* path){
     Axis aX(101,0.0,5.0);
     Axis aY(20,0.975,0.025);
     Table2D result(aX,aY);
@@ -24,7 +24,7 @@ Table2D TableReader::Honda(const char* path){
     return result;
 }
 
-void TableReader::ReadFileHonda(const char* fname, unsigned ny,Table2D& table){
+void TableFactory::ReadFileHonda(const char* fname, unsigned ny,Table2D& table){
     // printf("reading file %s (for Y[%d])\n",fname,ny);
     std::ifstream inf;
     inf.open(fname);
@@ -41,7 +41,7 @@ void TableReader::ReadFileHonda(const char* fname, unsigned ny,Table2D& table){
     inf.close();
 }
 
-Table2D TableReader::FromFunction(Axis ax,Axis ay,double(*fun)(double, double)){
+Table2D TableFactory::FromFunction(Axis ax,Axis ay,std::function<double(double, double)> fun){
     Table2D result(ax,ay);
     for(auto nx:AxisBins(ax)){
         for(auto ny:AxisBins(ay)){
@@ -51,7 +51,7 @@ Table2D TableReader::FromFunction(Axis ax,Axis ay,double(*fun)(double, double)){
     return result;
 };
 
-Table1D TableReader::FromFunction(Axis ax, double(*fun)(double)){
+Table1D TableFactory::FromFunction(Axis ax, std::function<double(double)> fun){
     Table1D result(ax);
     for(auto nx:AxisBins(ax)){
         result.SetPoint(nx,fun(ax(nx)));

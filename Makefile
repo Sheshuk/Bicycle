@@ -5,7 +5,7 @@ CFLAGS+=-I `root-config --incdir` -I include/
 GTESTLIBS= -lpthread -L /usr/src/gtest -lgtest -lgtest_main
 LIBS=`root-config --libs`  -lm  -lstdc++
 
-OBJ = Axis.o Array1D.o Array2D.o TableReader.o TableIntegrator.o Table1D.o Table2D.o  RootUtils.o
+OBJ = Axis.o Array1D.o Array2D.o TableFactory.o TableIntegrator.o Table1D.o Table2D.o  RootUtils.o
 TARGET =TestFlux
 TEST_DIR = ./test/
 BIN_DIR=./bin/
