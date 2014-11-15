@@ -1,7 +1,7 @@
 #include <cstdio>
 #include "Axis.h"
 
-Axis::Axis(unsigned NBins,double Min, double Max):
+Axis::Axis(size_t NBins,double Min, double Max):
 nBins(NBins),min(Min),max(Max){
 
 };
@@ -27,7 +27,7 @@ void Axis::Print() const{
 }
 
 void Axis::PrintRange() const{
-	for (unsigned i = 0; i < nBins; ++i)PrintVal(i);
+	for (size_t i = 0; i < nBins; ++i)PrintVal(i);
 }
 void Axis::PrintVal(double x) const {
 	printf("Axis[%2.2f]= %f\n",x,(*this)(x));

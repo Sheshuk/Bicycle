@@ -32,7 +32,7 @@ Table1D Integral::dX   (double x0, double x1,double (*ArgFun)(double)){
 	Axis otherAxis=flux.GetYaxis();
 	Table1D result(otherAxis);
 
-	for(unsigned n : AxisBins(otherAxis)) {
+	for(unsigned n : Axis::Bins(otherAxis)) {
 		rootFunc.SetParameter(0,otherAxis(n));
 		double J=rootFunc.Integral(x0,x1);
 		result.SetPoint(n,J);

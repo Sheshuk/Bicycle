@@ -3,50 +3,50 @@
 #include "Axis.h"
 // interface for making ranged for loops
 ///------------------------------------------
-class axis_VirtualIterator
+class Axis::virtual_iterator
 {
 public:
-	axis_VirtualIterator(const Axis& A,unsigned Pos):a(A),pos(Pos){};
-	bool operator!= (const axis_VirtualIterator& other) const{return (pos!=other.pos);}
-	const axis_VirtualIterator& operator++(){++pos;return *this;}
+	virtual_iterator(const Axis& A,size_t Pos):a(A),pos(Pos){};
+	virtual ~virtual_iterator(){};
+	// size_t operator*() const=0;
+	bool operator!= (const virtual_iterator& other)const{return (pos!=other.pos);}
+	const virtual_iterator& operator++(){++pos;return *this;}
 protected:
 	const Axis& a;
-	unsigned pos;
+	size_t pos;
 };
 //----------------------------------------------
-class axis_IterV:public axis_VirtualIterator
+class Axis::Values
 {
+	class iterator:public virtual_iterator{
+	public:
+		iterator(const Axis& A,size_t Pos):virtual_iterator(A,Pos){};
+		double operator*() const{return a.ValFromIdx(pos);}
+	};
+
 public:
-	axis_IterV(const Axis& A,unsigned Pos):axis_VirtualIterator(A,Pos){};
-	double operator*() const{return a.ValFromIdx(pos);}
+	Values(const Axis& Ax):axis(Ax){};
+	iterator begin() const{return iterator(axis,0);}
+	iterator end()   const{return iterator(axis,axis.nBins);}
+private:
+	const Axis& axis;
 };
 //----------------------------------------------
-class axis_IterB:public axis_VirtualIterator
+class Axis::Bins
 {
+	class iterator:public virtual_iterator{
+	public:
+		iterator(const Axis& A,size_t Pos):virtual_iterator(A,Pos){};
+		size_t operator*() const{return pos;}
+	};
+
 public:
-	axis_IterB(const Axis& A,unsigned Pos):axis_VirtualIterator(A,Pos){};
-	unsigned operator*() const{return pos;}
+	Bins(const Axis& Ax):axis(Ax){};
+	iterator begin() const{return iterator(axis,0);}
+	iterator end()   const{return iterator(axis,axis.nBins);}
+private:
+	const Axis& axis;
 };
 
-//----------------------------------------------
-class AxisValues
-{
-public:
-	AxisValues(const Axis& Ax):axis(Ax){};
-	axis_IterV begin() const{return axis_IterV(axis,0);}
-	axis_IterV end()   const{return axis_IterV(axis,axis.Nbins());}
-private:
-	const Axis& axis;
-};
-//----------------------------------------------
-class AxisBins
-{
-public:
-	AxisBins(const Axis& Ax):axis(Ax){};
-	axis_IterB begin() const{return axis_IterB(axis,0);}
-	axis_IterB end()   const{return axis_IterB(axis,axis.Nbins());}
-private:
-	const Axis& axis;
-};
 //----------------------------------------------
 #endif

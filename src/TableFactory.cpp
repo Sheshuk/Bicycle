@@ -17,7 +17,7 @@ Table2D TableFactory::Honda(const char* path){
     Table2D result(aX,aY);
     
     char fname[100];
-    for(auto ny:AxisBins(aY)){
+    for(auto ny:Axis::Bins(aY)){
         sprintf(fname,"%s/cz%02i.mflx",path,ny+1);
         ReadFileHonda(fname,ny,result);
     }
@@ -30,7 +30,7 @@ void TableFactory::ReadFileHonda(const char* fname, unsigned ny,Table2D& table){
     inf.open(fname);
     if(!inf.good()) throw MRexception("Error opening file: \""+std::string(fname)+"\"");
     double p,mplus,mminus;
-    for (auto nx:AxisBins(table.GetXaxis()))
+    for (auto nx:Axis::Bins(table.GetXaxis()))
     {
         inf>>p>>mplus>>mminus;
         if(inf.fail()){
@@ -43,8 +43,8 @@ void TableFactory::ReadFileHonda(const char* fname, unsigned ny,Table2D& table){
 
 Table2D TableFactory::FromFunction(Axis ax,Axis ay,std::function<double(double, double)> fun){
     Table2D result(ax,ay);
-    for(auto nx:AxisBins(ax)){
-        for(auto ny:AxisBins(ay)){
+    for(auto nx:Axis::Bins(ax)){
+        for(auto ny:Axis::Bins(ay)){
             result.SetPoint(nx,ny,fun(ax(nx),ay(ny)));
         }
     }
@@ -53,7 +53,7 @@ Table2D TableFactory::FromFunction(Axis ax,Axis ay,std::function<double(double, 
 
 Table1D TableFactory::FromFunction(Axis ax, std::function<double(double)> fun){
     Table1D result(ax);
-    for(auto nx:AxisBins(ax)){
+    for(auto nx:Axis::Bins(ax)){
         result.SetPoint(nx,fun(ax(nx)));
     }
     return result;
