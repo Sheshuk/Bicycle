@@ -9,7 +9,7 @@ Array1D::~Array1D(){
 	Clear();
 }
 
-double& Array1D::At(unsigned i) const {
+double& Array1D::At(size_t i) const {
 	if(i>sizeX-1)
 		throw MRexception(
 			std::string("Error acessing data with nx=")+
@@ -18,7 +18,7 @@ double& Array1D::At(unsigned i) const {
 	return data[i];
 };
 
-void Array1D::Init(unsigned SizeX){
+void Array1D::Init(size_t SizeX){
 	Clear();
 	sizeX=SizeX;
 	if(sizeX) data=new double[Len()];

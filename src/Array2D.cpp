@@ -9,7 +9,7 @@ Array2D::~Array2D(){
 	Clear();
 }
 
-double& Array2D::At(unsigned i,unsigned j) const {
+double& Array2D::At(size_t i,size_t j) const {
 	if(i>sizeX-1)
 		throw MRexception(
 			std::string("Error acessing data with nx=")+
@@ -23,7 +23,7 @@ double& Array2D::At(unsigned i,unsigned j) const {
 		return data[j*sizeX+i];
 };
 
-void Array2D::Init(unsigned SizeX, unsigned SizeY){
+void Array2D::Init(size_t SizeX, size_t SizeY){
 	Clear();
 	sizeX=SizeX;
 	sizeY=SizeY;
@@ -36,10 +36,10 @@ void Array2D::Clear(){
 }
 
 double Array2D::Eval(double xi,double yi) const{
-	unsigned xi0=floor(xi);
-	unsigned yi0=floor(yi);
-	if(xi0<0)xi0=0; if(xi0>sizeX-2)xi0=sizeX-2;
-	if(yi0<0)yi0=0; if(yi0>sizeY-2)yi0=sizeY-2;
+	size_t xi0=floor(xi);
+	size_t yi0=floor(yi);
+	if(xi<0)xi0=0; if(xi0>sizeX-2)xi0=sizeX-2;
+	if(yi<0)yi0=0; if(yi0>sizeY-2)yi0=sizeY-2;
 	double x=xi-xi0;
 	double y=yi-yi0;
 	double f00=At(xi0,  yi0  );

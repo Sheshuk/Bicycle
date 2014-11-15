@@ -5,7 +5,7 @@
 #include "TableIntegrator.h"
 #include "TableFactory.h"
 
-TEST (Test_TableIntegrator, Integrate_dX_const){
+TEST (test_TableIntegrator, Integrate_dX_const){
 	Table2D my_table_2d=TableFactory::FromFunction(
 		Axis(10,-50,50),Axis(10,-50,50),
 		[](double x, double y)->double {return 1.0;}
@@ -22,7 +22,7 @@ TEST (Test_TableIntegrator, Integrate_dX_const){
 	}
 }
 
-TEST (Test_TableIntegrator, Integrate_dX_sin){
+TEST (test_TableIntegrator, Integrate_dX_sin){
 	Table2D my_table_2d=TableFactory::FromFunction(
 		Axis(1000,-5,5),Axis(10,-50,50),
 		[](double x,double y)->double {return sin(x)*sin(y);}
@@ -38,7 +38,7 @@ TEST (Test_TableIntegrator, Integrate_dX_sin){
 	}
 }
 
-TEST (Test_TableIntegrator, Integrate_dX_log){
+TEST (test_TableIntegrator, Integrate_dX_log){
 	Table2D my_table_2d=TableFactory::FromFunction(
 		Axis(100,0,20),Axis(10,-50,50),
 		[](double x,double y)->double {return exp(-x);}
