@@ -85,7 +85,7 @@ TEST (test_Array, InterpolationNearest){
 }
 
 TEST (test_Array, BigArrayLoop_value){
-	Array<3> array({100,100,100});
+	Array<3> array({1000,100,100});
 	printf("Array length=%ld\n",array.Length());
 	for(auto && val: array){
 		val++;
@@ -94,7 +94,7 @@ TEST (test_Array, BigArrayLoop_value){
 }
 
 TEST (test_Array, BigArrayLoop_index){
-	Array<3> array({100,100,100});
+	Array<3> array({1000,100,100});
 	printf("Array length=%ld\n",array.Length());
 	for(auto && idx: array.Dimensions()){
 		array(idx)++;
