@@ -3,7 +3,10 @@
 
 #include <cmath>
 #include <array>
+#include <functional>
 #include "MRexception.h"
+
+class Interpolator;
 //----------------------------------------------
 template<size_t N>
 class Array
@@ -15,9 +18,10 @@ public:
 	class iterator;
 public:
 	Array(const index& Sizes):dimension(Sizes),data(0){data=new double[Length()]();}
-	virtual ~Array(){if(data)delete[] data;}
+	~Array(){if(data)delete[] data;}
 	
-	virtual double Eval(const point& pnt) const;
+	double Nearest(const point& pnt) const;
+	double Eval(const point& pnt, std::function<double(size_t, double)> w=0) const;
 	
 	inline size_t Length()   const {return dimension.Length();}
 	inline size_t Size(size_t Naxis) const {return dimension[Naxis];}
@@ -46,11 +50,37 @@ protected:
 
 
 template<size_t N>
-double Array<N>::Eval(const point& pnt) const{
+double Array<N>::Nearest(const point& pnt) const{
 	index pnt0;
 	for (size_t i = 0; i < N; ++i)
 		pnt0[i]=round(pnt[i]);
 	return at(pnt0);
 }
+
+/**
+ * @brief general interpolation method
+ * @details Calculate interpolated value in point pnt, using weight function, provided by user
+ * 
+ * @param pnt Point where we need to get value
+ * @param w Function double w(size_t n, double x), which calculates 
+ * the weight of node n for point with coordinate x. This function is used for each axis
+ * 
+ * @return interpolated value
+ */
+template<size_t N>
+double Array<N>::Eval(const point& pnt, std::function<double(size_t, double)> w) const{
+	if(w==0)return Nearest(pnt);
+	double result=0;
+	for(auto &idx: dimension){
+		double weight=1;
+		for(size_t dim=0;dim<N;++dim){
+			weight*=w(idx[dim],pnt[dim]);
+			// if(weight==0)break;
+		}
+		if(weight)result+=weight*at(idx);
+	}
+	return result;
+}
+
 
 #endif

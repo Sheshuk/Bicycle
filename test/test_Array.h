@@ -70,19 +70,6 @@ TEST (test_Array, OutOfRange_exception){
 	ASSERT_NO_THROW(array3d({99,1,1}));
 }
 
-///checks for array interpolation
-TEST (test_Array, InterpolationNearest){
-	Array<3> array({5,5,5});
-	for(auto&& el: array)el=5;
-
-	array({2,2,2})=10;
-	for(double x=1.0; x<=3.0;x+=0.1)
-		for(double y=1.0; y<=3.0;y+=0.1)
-			for(double z=1.0; z<=3.0;z+=0.1){
-				double expected=(fabs(x-2)<0.5&&fabs(y-2)<0.5&&fabs(z-2)<0.5)?10:5;
-				EXPECT_DOUBLE_EQ(expected,array.Eval({x,y,z}));	
-	}
-}
 
 TEST (test_Array, BigArrayLoop_value){
 	Array<3> array({1000,100,100});
@@ -102,4 +89,49 @@ TEST (test_Array, BigArrayLoop_index){
 	SUCCEED();
 }
 
+///checks for array interpolation
+TEST (test_Array, InterpolationNearest){
+	Array<3> array({5,5,5});
+	for(auto&& el: array)el=-5;
+	array({2,2,2})=10;
+	array({2,2,3})=0;
+
+	EXPECT_DOUBLE_EQ(10,array.Eval({1.6,1.6,1.6}));
+	EXPECT_DOUBLE_EQ(10,array.Eval({2.4,1.6,2.4}));
+	EXPECT_DOUBLE_EQ(10,array.Eval({2.4,2.4,2.4}));
+	EXPECT_DOUBLE_EQ(-5,array.Eval({2.4,1.4,2.4}));
+	EXPECT_DOUBLE_EQ(-5,array.Eval({2.4,2.4,1.4}));
+	EXPECT_DOUBLE_EQ( 0,array.Eval({2.4,2.4,2.6}));
+	EXPECT_DOUBLE_EQ(-5,array.Eval({1.5,2.5,1.5}));
+	EXPECT_DOUBLE_EQ(-5,array.Eval({2.5,2.5,2.5}));
+	EXPECT_DOUBLE_EQ(10,array.Eval({1.5,1.5,1.5}));
+}
+
+double w_linear(size_t n, double x){
+	double dx=fabs(x-n);
+	return (dx>1)?0:1-dx;
+}
+TEST (test_Array, InterpolationLinear1d){
+	Array<1> array({500});
+	array({2})= 10;
+	array({3})=-10;
+	EXPECT_DOUBLE_EQ( 0.0,array.Eval({0  },w_linear));
+	EXPECT_DOUBLE_EQ( 0.0,array.Eval({0.5},w_linear));
+	EXPECT_DOUBLE_EQ( 0.0,array.Eval({1  },w_linear));
+	EXPECT_DOUBLE_EQ( 5.0,array.Eval({1.5},w_linear));
+	EXPECT_DOUBLE_EQ(10.0,array.Eval({2  },w_linear));
+	EXPECT_DOUBLE_EQ( 0.0,array.Eval({2.5}  ,w_linear));
+	EXPECT_DOUBLE_EQ(-2.5,array.Eval({2.625}  ,w_linear));
+	EXPECT_DOUBLE_EQ(- 10,array.Eval({3.0}  ,w_linear));
+}
+
+
+TEST (test_Array, InterpolationLinear3d){
+	Array<3> array({100,100,100});
+	array({2,2,2})= 15;
+	array({2,2,3})=-5;
+	EXPECT_DOUBLE_EQ( 15,array.Eval({2,2,2  },w_linear));
+	EXPECT_DOUBLE_EQ(  5,array.Eval({2,2,2.5},w_linear));
+	EXPECT_DOUBLE_EQ( -5,array.Eval({2,2,3  },w_linear));
+}
 
