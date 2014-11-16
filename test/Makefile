@@ -34,5 +34,6 @@ clean:
 	rm $(TARGET)
 
 run: $(TARGET)
+	rm report/*.xml
 	./$(TARGET) --gtest_color=yes --gtest_output=xml:report/
 

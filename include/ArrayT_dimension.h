@@ -10,7 +10,7 @@ public:
 					dimension.IdxFromPos(pos,idx);
 				};
 				bool operator!= (const iterator& other) const {return other.pos!=pos;}
-				const iterator operator++(){dimension.IdxFromPos(++pos,idx);return *this;}
+				const iterator operator++();
 				const Array<N>::index& operator *(){return idx;}
 			private:
 				const Array<N>::Dimension& dimension;
@@ -37,6 +37,20 @@ private:
 };
 
 // -------------------------------------------------
+
+template<size_t N>
+const typename Array<N>::Dimension::iterator Array<N>::Dimension::iterator::operator++(){
+	pos++;
+	size_t i=N-1;
+	idx[i]++;
+	while(idx[i]>=dimension[i] && i>0){
+		idx[i]-=dimension[i];
+		++idx[i-1];
+		--i;
+	}
+	return *this;
+}
+
 
 template<size_t N>
 size_t Array<N>::Dimension::PosFromIdx(const index& idx) const {
