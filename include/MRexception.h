@@ -11,8 +11,14 @@ public:
 class MR_out_of_range: public MRexception
 {
 public:
-	MR_out_of_range(size_t idx, size_t size) noexcept:
-	MRexception("Index ["+std::to_string(idx)+"] out of range [0.."+std::to_string(size)+"]"){	};
+	MR_out_of_range(size_t idx, size_t low, size_t upp) noexcept:MRexception(make_message(idx,low,upp)){};
+private:
+	std::string make_message(size_t idx, size_t low, size_t upp){
+		char msg[200];
+		sprintf(msg,"index %ld out of range [%ld..%ld]",idx,low,upp);
+		return msg;
+	}
 };
+
 
 #endif

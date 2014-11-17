@@ -57,6 +57,7 @@ TEST (test_Array, ForLoop_Index){
 	
 	Array<2> array({10,10});
 	for(auto& idx: array.Dimensions()){
+		printf("idx=%ld %ld \n",idx[0],idx[1]);
 		ASSERT_NO_THROW(array(idx));
 	}
 }
@@ -115,14 +116,14 @@ TEST (test_Array, InterpolationLinear1d){
 	Array<1> array({500});
 	array({2})= 10;
 	array({3})=-10;
-	EXPECT_DOUBLE_EQ( 0.0,array.Eval({0  },w_linear));
-	EXPECT_DOUBLE_EQ( 0.0,array.Eval({0.5},w_linear));
-	EXPECT_DOUBLE_EQ( 0.0,array.Eval({1  },w_linear));
-	EXPECT_DOUBLE_EQ( 5.0,array.Eval({1.5},w_linear));
-	EXPECT_DOUBLE_EQ(10.0,array.Eval({2  },w_linear));
-	EXPECT_DOUBLE_EQ( 0.0,array.Eval({2.5}  ,w_linear));
-	EXPECT_DOUBLE_EQ(-2.5,array.Eval({2.625}  ,w_linear));
-	EXPECT_DOUBLE_EQ(- 10,array.Eval({3.0}  ,w_linear));
+	EXPECT_DOUBLE_EQ( 0.0,array.Eval({0  },w_linear,1));
+	EXPECT_DOUBLE_EQ( 0.0,array.Eval({0.5},w_linear,1));
+	EXPECT_DOUBLE_EQ( 0.0,array.Eval({1  },w_linear,1));
+	EXPECT_DOUBLE_EQ( 5.0,array.Eval({1.5},w_linear,1));
+	EXPECT_DOUBLE_EQ(10.0,array.Eval({2  },w_linear,1));
+	EXPECT_DOUBLE_EQ( 0.0,array.Eval({2.5}  ,w_linear,1));
+	EXPECT_DOUBLE_EQ(-2.5,array.Eval({2.625}  ,w_linear,1));
+	EXPECT_DOUBLE_EQ(- 10,array.Eval({3.0}  ,w_linear,1));
 }
 
 
@@ -130,8 +131,8 @@ TEST (test_Array, InterpolationLinear3d){
 	Array<3> array({100,100,100});
 	array({2,2,2})= 15;
 	array({2,2,3})=-5;
-	EXPECT_DOUBLE_EQ( 15,array.Eval({2,2,2  },w_linear));
-	EXPECT_DOUBLE_EQ(  5,array.Eval({2,2,2.5},w_linear));
-	EXPECT_DOUBLE_EQ( -5,array.Eval({2,2,3  },w_linear));
+	EXPECT_DOUBLE_EQ( 15,array.Eval({2,2,2  },w_linear,1));
+	EXPECT_DOUBLE_EQ(  5,array.Eval({2,2,2.5},w_linear,1));
+	EXPECT_DOUBLE_EQ( -5,array.Eval({2,2,3  },w_linear,1));
 }
 

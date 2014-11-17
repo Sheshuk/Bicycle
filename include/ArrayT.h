@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <array>
+#include <algorithm>
 #include <functional>
 #include "MRexception.h"
 
@@ -12,21 +13,20 @@ template<size_t N>
 class Array
 {
 public:
-	typedef std::array<size_t,N> index;
+	typedef std::array<int,N> index;
 	typedef std::array<double,N> point;
 	class Dimension;
 	class iterator;
 public:
-	Array(const index& Sizes):dimension(Sizes),data(0){data=new double[Length()]();}
+		Array(const index& Sizes):dimension(index{0},Sizes),data(0){data=new double[Length()]();}
 	~Array(){if(data)delete[] data;}
 	
 	double Nearest(const point& pnt) const;
-	double Eval(const point& pnt, std::function<double(size_t, double)> w=0) const;
+	double Eval(const point& pnt, std::function<double(int, double)> w=0, int width=0) const;
 	
 	inline size_t Length()   const {return dimension.Length();}
 	inline size_t Size(size_t Naxis) const {return dimension[Naxis];}
 	inline const Dimension& Dimensions(){return dimension;}
-
 	inline double& operator ()(const index& Idx)      {return at(Idx);}
 	inline double  operator ()(const index& Idx) const{return at(Idx);}
 
@@ -68,10 +68,18 @@ double Array<N>::Nearest(const point& pnt) const{
  * @return interpolated value
  */
 template<size_t N>
-double Array<N>::Eval(const point& pnt, std::function<double(size_t, double)> w) const{
+double Array<N>::Eval(const point& pnt, std::function<double(int, double)> w, int width) const{
 	if(w==0)return Nearest(pnt);
+	
+	index lowerIndex,upperIndex;
+	for (size_t i = 0; i < N; ++i){
+		int central=round(pnt[i]);
+		lowerIndex[i]=std::max(central-width,0);
+		upperIndex[i]=std::min(central+width+1,dimension[i]);
+	}
+		
 	double result=0;
-	for(auto &idx: dimension){
+	for(auto &idx: Array<N>::Dimension(lowerIndex,upperIndex)){
 		double weight=1;
 		for(size_t dim=0;dim<N;++dim){
 			weight*=w(idx[dim],pnt[dim]);

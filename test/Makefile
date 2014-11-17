@@ -31,9 +31,9 @@ test_%: test_%.o
 
 
 clean:
-	rm $(TARGET)
+	rm -f $(TARGET) *.o
 
 run: $(TARGET)
-	rm report/*.xml
+	rm -f report/*.xml
 	./$(TARGET) --gtest_color=yes --gtest_output=xml:report/
 

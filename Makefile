@@ -34,7 +34,7 @@ obj: $(OBJECTS)
 
 
 clean:
-	rm $(BIN_DIR)/* $(LIB_DIR)/*
+	rm -f $(BIN_DIR)/* $(LIB_DIR)/*
 	(cd test/; $(MAKE) clean)
 tests:
 	$(MAKE) -C $(TEST_DIR)
