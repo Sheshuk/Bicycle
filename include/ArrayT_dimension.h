@@ -11,32 +11,34 @@ public:
 				dimension(Dim),idx(Idx),pos(Pos){}
 				bool operator!= (const iterator& other) const{return pos!=other.pos;}
 				const iterator operator++();
-				const Array<N>::index& operator *(){return idx;}
+				const index& operator *(){return idx;}
 			private:
-				const Array<N>::Dimension& dimension;
-				Array<N>::index idx;
+				const Dimension& dimension;
+				index idx;
 				size_t pos;
 		};
 public:
-	Dimension(const Array<N>::index& Lower,const Array<N>::index& Upper):lower(Lower),upper(Upper),length(1){
+	Dimension(const index& Lower,const index& Upper):lower(Lower),upper(Upper),length(1){
 		for(size_t i=0;i<N;++i){
 			sizes[i]=upper[i]-lower[i];
 			length*=sizes[i];
 		}
 	}
 	size_t PosFromIdx(const index& idx) const;
-	void IdxFromPos(size_t Pos, Array<N>::index& Result) const;
-	Array<N>::index IdxFromPos(size_t Pos) const;
+	size_t PosFromPnt(const point& idx) const;
+	void IdxFromPos(size_t Pos, index& Result) const;
+	index IdxFromPos(size_t Pos) const;
 	
-	int operator[](size_t ndim) const {return sizes[ndim];}
-
+	inline int operator[](size_t ndim) const {return sizes[ndim];}
+	inline int Min(size_t ndim) const {return lower[ndim];}
+	inline int Max(size_t ndim) const {return upper[ndim];}
 	size_t Length() const {return length;}
 	iterator begin() const{return iterator(*this,lower,0);}
 	iterator end()   const{return iterator(*this,upper,length);}
 private:
-	Array<N>::index sizes;  //upper index limits 
-	Array<N>::index lower;  //lower index limits
-	Array<N>::index upper;  //upper index limits
+	index sizes;  //upper index limits 
+	index lower;  //lower index limits
+	index upper;  //upper index limits
 	size_t length;
 };
 
@@ -66,6 +68,19 @@ size_t Array<N>::Dimension::PosFromIdx(const index& idx) const {
 	}
 	return result;
 }
+
+template<size_t N>
+size_t Array<N>::Dimension::PosFromPnt(const point& pnt) const {
+	size_t result=0;
+	for(size_t i = 0; i < N; ++i)
+	{
+		int idx=round(pnt[i]);
+		if(idx<lower[i]||idx>=upper[i])throw MR_out_of_range(idx,lower[i],upper[i]);
+		result=result*sizes[i]+idx-lower[i];
+	}
+	return result;
+}
+
 
 template<size_t N>
 void Array<N>::Dimension::IdxFromPos(size_t Pos, Array<N>::index& Result) const

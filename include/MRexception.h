@@ -20,5 +20,16 @@ private:
 	}
 };
 
+class MR_length_mismatch: public MRexception
+{
+public:
+	MR_length_mismatch(size_t len1, size_t len2) noexcept:MRexception(make_message(len1,len2)){};
+private:
+	std::string make_message(size_t len1, size_t len2){
+		char msg[200];
+		sprintf(msg,"array length mismatch: %ld!=%ld",len1,len2);
+		return msg;
+	}
+};
 
 #endif

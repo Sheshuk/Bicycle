@@ -18,7 +18,7 @@ Table2D TableFactory::Honda(const char* path){
     
     char fname[100];
     for(auto ny:Axis::Bins(aY)){
-        sprintf(fname,"%s/cz%02i.mflx",path,ny+1);
+        sprintf(fname,"%s/cz%02li.mflx",path,ny+1);
         ReadFileHonda(fname,ny,result);
     }
     return result;

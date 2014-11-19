@@ -30,4 +30,5 @@ test/test_all
 *.out
 *.app
 
-
+#images 
+*.png
