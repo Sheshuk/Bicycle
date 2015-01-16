@@ -12,8 +12,9 @@ template<size_t N>
 class Array
 {
 public:
-	typedef std::array<int,N> index;
-	typedef std::array<double,N> point;
+	using index=std::array<int,N>;
+	using point=std::array<double,N>;
+	
 	class Dimension;
 	class iterator;
 public:
@@ -51,7 +52,14 @@ protected:
 #include "ArrayT_dimension.h"
 #include "ArrayT_Iterator.h"
 //--------------------------------Array class implementation-----------------------------
-
+template<size_t N>
+typename Array<N>::point point(const typename Array<N>::index &idx){
+	typename Array<N>::point p;
+	for(size_t i=0;i<N;++i){
+		p[i]=idx[i];
+	}
+	return p;
+}
 
 template<size_t N>
 double Array<N>::Nearest(const point& pnt) const{

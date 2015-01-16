@@ -9,11 +9,10 @@ CFLAGS+=-I $(BICYCLE_DIR)/include
 
 # CFLAGS+=-O3
 
-BCL_LIB=$(BICYCLE_DIR)/lib/libBicycle.a
 # LIBS=-L $(BICYCLE_DIR)/lib -lBicycle 
-LIBS=`root-config --libs`  -lm  -lstdc++
-LIBS+=-lpthread -L /usr/src/gtest -lgtest_main -lgtest 
-ALLTESTS=test_Axis.h test_Array.h test_Table1D.h test_Table2D.h  test_TableIntegrator.h
+LIBS=-lm  -lstdc++ -lpthread -L /usr/src/gtest -lgtest_main -lgtest -lBicycle
+RLIBS=`root-config --libs`
+ALLTESTS=$(ls *.h)
 TARGET =test_all
 
 all: $(TARGET) run
