@@ -5,12 +5,16 @@ CFLAGS+=-I `root-config --incdir` -I include/
 GTESTLIBS= -lpthread -L /usr/src/gtest -lgtest -lgtest_main
 LIBS=`root-config --libs`  -lm  -lstdc++
 
-OBJ = Axis.o Interpolator.o ArrayT.o TableT.o Array1D.o Array2D.o TableFactory.o TableIntegrator.o Table1D.o Table2D.o  RootUtils.o
+OBJ = Axis.o Interpolator.o ArrayT.o TableT.o
+OBJ_R = Array1D.o Array2D.o TableFactory.o TableIntegrator.o Table1D.o Table2D.o  RootUtils.o
 TARGET =TestFlux
-TEST_DIR = ./test/
-EXMPL_DIR= ./example/
-BIN_DIR=./bin/
-LIB_DIR=./lib/
+
+BYCICLE_DIR=$(shell pwd)
+TEST_DIR = $(BYCICLE_DIR)/test/
+EXMPL_DIR= $(BYCICLE_DIR)/example/
+BIN_DIR=$(BYCICLE_DIR)/bin/
+INC_DIR=$(BYCICLE_DIR)/include/
+LIB_DIR=$(BYCICLE_DIR)/lib/
 OBJECTS=$(addprefix $(BIN_DIR),$(OBJ))
 
 all: libs examples tests
@@ -44,3 +48,11 @@ tests:
 examples:
 	#making $@
 	$(MAKE) -C $(EXMPL_DIR)
+
+install: 
+	ln -s $(LIB_DIR)/libBicycle.so /usr/lib/
+	ln -s $(INC_DIR)  /usr/include/Bicycle
+
+uninstall:
+	rm /usr/include/Bicycle
+	rm /usr/lib/libBicycle.so
