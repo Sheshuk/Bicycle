@@ -1,4 +1,7 @@
 Bicycle
 =======
+Collection of invented bicycles
 
-Collection of invented bycicles
+![Logo](Pechkin.png)
+
+*почему я раньше вредный был? Потому что у меня велосипеда не было!*
