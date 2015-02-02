@@ -1,44 +1,55 @@
 #include "TCanvas.h"
+#include "TMultiGraph.h"
 #include "RootUtils.h"
 int main(int argc, char const *argv[])
 {	
-	Axis ax0({50, 0,20});
+	Axis ax0({20, 0,20});
 	Table<1> table0({ax0});
 	for(auto&& x : Axis::Values(ax0)){
 		table0.SetPoint({x},cos(3.1415*0.02*x*x));
 	}
 
 	Axis ax1({1000,0,20});
-	Table<1> table1({ax1});
-	Table<1> table2({ax1});
-	Table<1> table3({ax1});
+	Table<1> tableNrs({ax1});
+	Table<1> tableLin({ax1});
+	Table<1> tableLag({ax1});
+	Table<1> tableIDW({ax1});
 	for(auto&& x : Axis::Values(ax1)) {
-		printf("x=%4.2f\n",x);
-		table1.SetPoint({x},table0.Nearest ({x}));
-		table2.SetPoint({x},table0.Linear  ({x}));
-		table3.SetPoint({x},table0.Lagrange({x}));
+		tableNrs.SetPoint({x},table0.Nearest ({x}));
+		tableLin.SetPoint({x},table0.Linear  ({x}));
+		tableLag.SetPoint({x},table0.Lagrange({x}));
+		tableIDW.SetPoint({x},table0.IDW({x}));
 	}
 
 	TGraph g0=make_TGraph(table0);
 	g0.SetMarkerStyle(4);
 	g0.SetMarkerColor(kBlack);
-	TGraph g1=make_TGraph(table1);
+	TGraph g1=make_TGraph(tableNrs);
 	g1.SetMarkerStyle(6);
 	g1.SetMarkerColor(kRed+2);
 	g1.SetLineColor(kRed);
-	TGraph g2=make_TGraph(table2);
+	TGraph g2=make_TGraph(tableLin);
 	g2.SetMarkerStyle(6);
 	g2.SetMarkerColor(kBlue+2);
 	g2.SetLineColor(kBlue);
-	TGraph g3=make_TGraph(table3);
+	TGraph g3=make_TGraph(tableLag);
 	g3.SetMarkerStyle(7);
 	g3.SetMarkerColor(kGreen+2);
-	g3.SetLineColor(kGreen);
+	g3.SetLineColor(kGreen+2);
+	TGraph g4=make_TGraph(tableIDW);
+	g4.SetMarkerStyle(7);
+	g4.SetMarkerColor(kGreen);
+	g4.SetLineColor(kGreen);
 	TCanvas* c=new TCanvas;
-	g0.Draw("AP");
-	g1.Draw("same L");
-	g2.Draw("same L");
-	g3.Draw("same L");
+	TMultiGraph mg;
+	mg.Add(&g0);
+	mg.Add(&g1);
+	mg.Add(&g2);
+	mg.Add(&g3);
+	mg.Add(&g4);
+	mg.SetMaximum(5);
+	mg.SetMinimum(-5);
+	mg.Draw("AL");
 	c->Print("example1.png");
 
 }

@@ -2,7 +2,7 @@
 #include "Axis.h"
 
 Axis::Axis(size_t NBins,double Min, double Max):
-nBins(NBins),min(Min),max(Max){
+{
 
 };
 

@@ -8,20 +8,17 @@ public:
 	class Bins;
 	class virtual_iterator;
 public:
-	Axis(size_t NBins,double Min, double Max);
-	Axis(const Axis& a);
-	double IdxFromVal(double x) const;
-	double ValFromIdx(double i) const;
+	Axis(size_t NBins,double Min, double Max):nBins(NBins),min(Min),max(Max){};
+	Axis(const Axis& a):nBins(a.nBins),min(a.min),max(a.max){};
+	inline double IdxFromVal(double x) const {return  (x-min)*double(nBins-1)/(max-min);}
+	inline double ValFromIdx(double i) const {return  min+i*(max-min)/double(nBins-1); }
 	inline double Min()     const {return min;}
 	inline double Max()     const {return max;}
 	inline size_t Nbins() const {return nBins;}
 	inline double BinSize() const {return (max-min)/(nBins-1);}
-	bool isInRange(double x) const;
-	double operator()(double x) const{return ValFromIdx(x);}
+	inline bool isInRange(double x) const{return (x>min)==(x<max)||(x==min)||(x==max);};
+	inline double operator()(double x) const{return ValFromIdx(x);}
 
-	void Print() const;
-	void PrintRange() const;
-	void PrintVal(double x) const;
 private:
 	size_t nBins;
 	double min,max;

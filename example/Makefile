@@ -12,7 +12,7 @@ CFLAGS+=-I $(BICYCLE_DIR)/include
 BCL_LIB=$(BICYCLE_DIR)/lib/libBicycle.a
 # LIBS=-L $(BICYCLE_DIR)/lib -lBicycle 
 LIBS=`root-config --libs`  -lm  -lstdc++
-TARGET =example1 example2
+TARGET =example1 example2 example3
 
 all: $(TARGET)
 

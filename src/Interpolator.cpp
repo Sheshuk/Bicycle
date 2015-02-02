@@ -1,20 +1,6 @@
 #include <cmath>
 #include "Interpolator.h"
 ///-------------------------------------------------
-double linear_w(int n, double x){
-		double dx=std::abs(x-n);
-		return (dx>1)?0:1-dx;
-}
-
-double lagrange_w(int i, double x,int j0, int j1){
-	double result=1;
-	for(int j=j0;j<j1;++j){
-		if(i!=j)result*=(x-j)/(i-j);
-	}
-	return result;
-};
-
-///-------------------------------------------------
 template<size_t N>
 double Interpolation::Interpolator<N>::CalcWeight(
 	const typename Array<N>::index &idx, 

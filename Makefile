@@ -5,8 +5,9 @@ CFLAGS+=-I `root-config --incdir` -I include/
 GTESTLIBS= -lpthread -L /usr/src/gtest -lgtest -lgtest_main
 LIBS=`root-config --libs`  -lm  -lstdc++
 
-OBJ = Axis.o Interpolator.o ArrayT.o TableT.o
-OBJ_R = Array1D.o Array2D.o TableFactory.o TableIntegrator.o Table1D.o Table2D.o  RootUtils.o
+# OBJ = Axis.o Interpolator.o ArrayT.o TableT.o
+# OBJ = Array1D.o Array2D.o TableFactory.o TableIntegrator.o Table1D.o Table2D.o  
+OBJ = RootUtils.o
 TARGET =TestFlux
 
 BYCICLE_DIR=$(shell pwd)
@@ -24,6 +25,7 @@ $(TARGET): $(OBJECTS) bin/main.o
 	#deps: $^
 	$(CXX) $(CFLAGS) $(LIBS) -o $@ $^
 	strip $@
+
 libs: $(LIB_DIR)libBicycle.so $(LIB_DIR)libBicycle.a
 
 $(LIB_DIR)libBicycle.so: $(OBJECTS)

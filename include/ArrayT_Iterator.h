@@ -15,22 +15,4 @@ protected:
 	size_t pos;
 };
 
-
-// -------------------------------------------------
-// template<size_t N>
-// class Array<N>::Values{
-// 	class iterator:public Array<N>::iterator{
-// 	public:
-// 		iterator(const Array& A,size_t Pos):Array<N>::iterator(A,Pos){};
-// 		double& operator*() const{return array->data[pos];}
-// 	};
-// public:
-// 	Values(Array<N>& A):array(A){};
-// 	iterator begin() const{return iterator(array,0);}
-// 	iterator end()   const{return iterator(array,array.length);}
-// private:
-// 	Array<N> &array;
-// };
-// template<size_t N> 
-
 #endif

@@ -30,6 +30,9 @@ public:
 	double Lagrange(const point &pnt)const{
 		return (Interpolation::Lagrange<N>(array)).Eval(TransformToLocal(pnt));
 	};
+	double IDW(const point &pnt)const{
+		return (Interpolation::IDW<N>(array)).Eval(TransformToLocal(pnt));
+	};
 	point TransformToLocal (const point& pnt) const{
 		point pntLocal;
 		for (size_t i = 0; i < N; ++i)pntLocal[i]=axes[i].IdxFromVal(pnt[i]);

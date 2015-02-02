@@ -10,7 +10,7 @@ CFLAGS+=-I $(BICYCLE_DIR)/include
 # CFLAGS+=-O3
 
 # LIBS=-L $(BICYCLE_DIR)/lib -lBicycle 
-LIBS=-lm  -lstdc++ -lpthread -L /usr/src/gtest -lgtest_main -lgtest -lBicycle
+LIBS=-lm  -lstdc++ -lpthread -L /usr/src/gtest -lgtest_main -lgtest
 RLIBS=`root-config --libs`
 ALLTESTS=$(ls *.h)
 TARGET =test_all
