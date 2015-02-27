@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites tests="20" failures="0" disabled="0" errors="0" timestamp="2015-02-02T10:31:43" time="2.144" name="AllTests">
+<testsuites tests="22" failures="0" disabled="0" errors="0" timestamp="2015-02-27T20:50:40" time="2.16" name="AllTests">
   <testsuite name="TestAxis" tests="8" failures="0" disabled="0" errors="0" time="0">
     <testcase name="ConstructionParameters" status="run" time="0" classname="TestAxis" />
     <testcase name="IsInRange_Positive" status="run" time="0" classname="TestAxis" />
@@ -10,16 +10,18 @@
     <testcase name="IdxFromVal_Negative" status="run" time="0" classname="TestAxis" />
     <testcase name="Reversibility_Index_Value" status="run" time="0" classname="TestAxis" />
   </testsuite>
-  <testsuite name="test_Array" tests="9" failures="0" disabled="0" errors="0" time="2.138">
+  <testsuite name="test_Array" tests="11" failures="0" disabled="0" errors="0" time="2.154">
     <testcase name="Length" status="run" time="0" classname="test_Array" />
     <testcase name="PositionCalculation" status="run" time="0" classname="test_Array" />
     <testcase name="IndexCalculation" status="run" time="0" classname="test_Array" />
     <testcase name="ElementFill" status="run" time="0" classname="test_Array" />
-    <testcase name="ForLoop_Values" status="run" time="0.001" classname="test_Array" />
+    <testcase name="ForLoop_Values" status="run" time="0.002" classname="test_Array" />
     <testcase name="ForLoop_Index" status="run" time="0" classname="test_Array" />
     <testcase name="OutOfRange_exception" status="run" time="0" classname="test_Array" />
-    <testcase name="BigArrayLoop_value" status="run" time="0.215" classname="test_Array" />
-    <testcase name="BigArrayLoop_index" status="run" time="1.922" classname="test_Array" />
+    <testcase name="BigArrayLoop_value" status="run" time="0.226" classname="test_Array" />
+    <testcase name="BigArrayLoop_index" status="run" time="1.909" classname="test_Array" />
+    <testcase name="Copy" status="run" time="0.017" classname="test_Array" />
+    <testcase name="Move" status="run" time="0" classname="test_Array" />
   </testsuite>
   <testsuite name="test_Interpolation" tests="3" failures="0" disabled="0" errors="0" time="0.006">
     <testcase name="Nearest" status="run" time="0" classname="test_Interpolation" />

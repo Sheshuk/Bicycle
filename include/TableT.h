@@ -9,11 +9,13 @@ template<size_t N>
 class Table
 {
 public:
-	typedef std::array<Axis,N> Axes;
-	typedef std::array<double,N> point;
-	typedef std::array<int,N> index;
+	using Axes=std::array<Axis,N>;
+	using point=std::array<double,N>;
+	using index=std::array<int,N>;
 private:
 	static index axesSizes(const Axes&);
+	static point axesMin(const Axes&);
+	static point axesMax(const Axes&);
 
 public:
 	Table(const Axes& Ax):axes(Ax),array(axesSizes(Ax)){};
@@ -41,7 +43,8 @@ public:
 	inline unsigned Nbins(size_t dim) const{return axes[dim].Nbins();}
 	inline double  Min(size_t dim) const {return axes[dim].Min();}
 	inline double  Max(size_t dim) const {return axes[dim].Max();}
-
+	double MinValue(){return array.MinValue();}
+	double MaxValue(){return array.MaxValue();}
 	const Axis& GetAxis(size_t n) const{return axes[n];}
 
 	const Array<N>& GetArray() const{return array;}	

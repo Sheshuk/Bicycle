@@ -89,3 +89,29 @@ TEST (test_Array, BigArrayLoop_index){
 	};
 	SUCCEED();
 }
+
+TEST (test_Array, Copy){
+	Array<3> arr1({1000,100,100});
+	auto length=arr1.Length();
+	arr1({10,10,10})=300;
+	Array<3> arr2=(arr1);
+	arr2({10,10,11})=200;
+
+	ASSERT_EQ(length,arr1.Length());
+	ASSERT_EQ(length,arr2.Length());
+	ASSERT_EQ(300,arr2({10,10,10}));
+	ASSERT_EQ(200,arr2({10,10,11}));
+	ASSERT_EQ(300,arr1({10,10,10}));
+	ASSERT_EQ(0,  arr1({10,10,11}));
+}
+
+TEST (test_Array, Move){
+	Array<3> arr1({1000,100,100});
+	auto length=arr1.Length();
+	arr1({10,10,10})=300;
+	Array<3> arr2=(std::move(arr1));
+	ASSERT_EQ(0,arr1.Length());
+	ASSERT_EQ(length,arr2.Length());
+	ASSERT_EQ(0,  arr2({10,10,11}));
+	ASSERT_EQ(300,arr2({10,10,10}));
+}

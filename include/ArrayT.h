@@ -18,14 +18,24 @@ public:
 	class Dimension;
 	class iterator;
 public:
-	Array(const Dimension& dims):dimension(dims),data(0){data=new double[Length()]();}
-	Array(const index& Sizes):dimension(index{0},Sizes),data(0){data=new double[Length()]();}
+	Array(const Dimension& dims):dimension(dims),length(dimension.Length()),data(new double[length]){}
+	Array(const index& Sizes):Array(Dimension(index{0},Sizes)){}
+	Array(const Array& other):Array(other.dimension){std::copy(other.data,other.data+length,data);}
+	Array(Array&& other):dimension(std::move(other.dimension)),length(other.length),data(other.data){other.data=0; other.length=0;}
 	~Array(){if(data)delete[] data;}
 	
+	//move operator
+	Array& operator = (Array&& other){
+		dimension=std::move(other.dimension);
+		length=other.length;
+		data=other.data;
+		other.data=0; other.length=0;
+	}
+
 	double Nearest(const point& pnt) const;
 	double Eval(const point& pnt, std::function<double(int, double)> w=0, int width=0) const;
 	
-	inline size_t Length()   const {return dimension.Length();}
+	inline size_t Length()   const {return length;}
 	inline int Size(size_t Naxis) const {return dimension[Naxis];}
 	inline const Dimension& Dimensions()const{return dimension;}
 	inline double& operator ()(const index& Idx)      {return Value(Idx);}
@@ -36,6 +46,9 @@ public:
 	inline size_t PositionP(const point& Idx)const{return dimension.PosFromPnt(Idx);}
 	inline index  Index(size_t Pos) const{return dimension.IdxFromPos(Pos);}
 
+	double MaxValue(){auto m=data[0]; for(auto &e: *this) m=std::max(m,e); return m;}
+	double MinValue(){auto m=data[0]; for(auto &e: *this) m=std::min(m,e); return m;}
+	
 	iterator begin() const{return iterator(this,0);}
 	iterator end()   const{return iterator(this,dimension.Length());}
 
@@ -45,8 +58,8 @@ protected:
 	double& Value(const point& Pnt) const{return data[PositionP(Pnt)];}
 protected:	
 	const Dimension dimension;
-	double * data;
 	size_t length;
+	double * data;
 };
 
 #include "ArrayT_dimension.h"

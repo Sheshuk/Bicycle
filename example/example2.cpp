@@ -1,21 +1,7 @@
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "RootUtils.h"
-#include <chrono>
-
-class Timer
-{
-public:
-	Timer(){Update();};
-	std::chrono::duration<double> Update(){
-		auto t0=t;
-		t=std::chrono::high_resolution_clock::now();
-		return (t-t0);
-	};
-
-private:
-  	std::chrono::high_resolution_clock::time_point t;
-};
+#include "Timer.h"
 
 int main(int argc, char const *argv[])
 {	
