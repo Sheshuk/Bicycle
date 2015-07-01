@@ -63,7 +63,7 @@ size_t Array<N>::Dimension::PosFromIdx(const index& idx) const {
 	size_t result=0;
 	for(size_t i = 0; i < N; ++i)
 	{
-		if(idx[i]<lower[i]||idx[i]>=upper[i])throw MR_out_of_range(idx[i],lower[i],upper[i]);
+		if(idx[i]<lower[i]||idx[i]>=upper[i])throw MR_IdxOutOfRange(idx[i],lower[i],upper[i]);
 		result=result*sizes[i]+idx[i]-lower[i];
 	}
 	return result;
@@ -75,7 +75,7 @@ size_t Array<N>::Dimension::PosFromPnt(const point& pnt) const {
 	for(size_t i = 0; i < N; ++i)
 	{
 		int idx=round(pnt[i]);
-		if(idx<lower[i]||idx>=upper[i])throw MR_out_of_range(idx,lower[i],upper[i]);
+		if(idx<lower[i]||idx>=upper[i])throw MR_IdxOutOfRange(idx,lower[i],upper[i]);
 		result=result*sizes[i]+idx-lower[i];
 	}
 	return result;

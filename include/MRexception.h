@@ -8,10 +8,22 @@ public:
 	MRexception(const std::string& str) noexcept: std::logic_error(str) {}
 };
 
-class MR_out_of_range: public MRexception
+class MR_ValOutOfRange: public MRexception
 {
 public:
-	MR_out_of_range(size_t idx, size_t low, size_t upp) noexcept:MRexception(make_message(idx,low,upp)){};
+	MR_ValOutOfRange(double val, double low, double upp) noexcept:MRexception(make_message(val,low,upp)){};
+private:
+	std::string make_message(double val, double low, double upp){
+		char msg[200];
+		sprintf(msg,"value %f out of range [%f..%f]",val,low,upp);
+		return msg;
+	}
+};
+
+class MR_IdxOutOfRange: public MRexception
+{
+public:
+	MR_IdxOutOfRange(size_t idx, size_t low, size_t upp) noexcept:MRexception(make_message(idx,low,upp)){};
 private:
 	std::string make_message(size_t idx, size_t low, size_t upp){
 		char msg[200];

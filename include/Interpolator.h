@@ -8,24 +8,38 @@
 namespace Interpolation{
 
 	template<size_t N>
-	class Interpolator
-	{
+	class VirtualInterpolator{
 	public:
-		Interpolator(const Array<N>& A):arr(A){};
-		virtual ~Interpolator(){};
-		double Eval(const typename Array<N>::point& pnt);
+		VirtualInterpolator(const Array<N>& A):arr(A){};
+		virtual ~VirtualInterpolator(){};
+		virtual double Eval(const typename Array<N>::point& pnt) = 0;
+	protected:
+		const Array<N> &arr;
+	};
+//------------------------------
+	template<size_t N>
+	class Nearest: public VirtualInterpolator<N>{
+	public:
+		Nearest(const Array<N>& A):VirtualInterpolator<N>(A){}
+		double Eval(const typename Array<N>::point& pnt) override { return this->arr.Eval(pnt);}
+	};
+//------------------------------
+	template<size_t N>
+	class WeightBased: public VirtualInterpolator<N>{
+	public:
+		WeightBased(const Array<N>& A, int BaseSize):VirtualInterpolator<N>(A),wBase(BaseSize){}
+		double Eval(const typename Array<N>::point& pnt) override;
 	protected:
 		virtual double W(int n, double x,std::pair<int, int> lims) = 0;
 		double CalcWeight(const typename Array<N>::index &idx, const typename Array<N>::point &pnt);
-		const Array<N> &arr;
 	protected:
 		int wBase=0; //!< Weight function half size (base)
 	};
 //------------------------------
 	template<size_t N>
-	class Linear: public Interpolator<N>{
+	class Linear: public WeightBased<N>{
 	public: 
-		Linear(const Array<N>& A):Interpolator<N>(A){this->wBase=1;};
+		Linear(const Array<N>& A):WeightBased<N>(A,1){};
 	protected:
 		double W(int n, double x,std::pair<int, int> lims) override{
 			double dx=std::abs(x-n);
@@ -34,9 +48,9 @@ namespace Interpolation{
 	};
 //------------------------------
 	template<size_t N>
-	class IDW: public Interpolator<N>{
+	class IDW: public WeightBased<N>{
 	public: 
-		IDW(const Array<N>& A):Interpolator<N>(A){this->wBase=3;};
+		IDW(const Array<N>& A):WeightBased<N>(A,3){};
 	protected:
 		double W(int n, double x,std::pair<int, int> lims) override{
 			double dx=std::abs(x-n);
@@ -45,9 +59,9 @@ namespace Interpolation{
 	};
 //------------------------------
 	template<size_t N>
-	class Lagrange: public Interpolator<N>{
+	class Lagrange: public WeightBased<N>{
 	public: 
-		Lagrange(const Array<N>& A):Interpolator<N>(A){this->wBase=-1;};
+		Lagrange(const Array<N>& A):WeightBased<N>(A,-1){};
 	protected:
 		double W(int n, double x,std::pair<int, int> lims) override{
 			double result=1;
@@ -60,31 +74,17 @@ namespace Interpolation{
 //----------------------------------------------------
 //Methods definition:
 template<size_t N>
-double Interpolation::Interpolator<N>::CalcWeight(
-	const typename Array<N>::index &idx, 
-	const typename Array<N>::point &pnt)
-{
-	double w=1;
-	for(size_t i=0; i<N; ++i){
-		int low=arr.Dimensions().Min(i);
-		int hig=arr.Dimensions().Max(i);
-		w*=W(idx[i],pnt[i],{low,hig});
-	}
-	return w;
-}
-
-template<size_t N>
-double Interpolation::Interpolator<N>::Eval(const typename Array<N>::point& pnt){
+double Interpolation::WeightBased<N>::Eval(const typename Array<N>::point& pnt){
 	typename Array<N>::index lowerIndex,upperIndex;
 	for (size_t i = 0; i < N; ++i){
 		if(wBase<0){
-			lowerIndex[i]=arr.Dimensions().Min(i);
-			upperIndex[i]=arr.Dimensions().Max(i);
+			lowerIndex[i]=this->arr.Dimensions().Min(i);
+			upperIndex[i]=this->arr.Dimensions().Max(i);
 		}
 		else{
 			int central=round(pnt[i]);
-			lowerIndex[i]=std::max(central-wBase,  arr.Dimensions().Min(i));
-			upperIndex[i]=std::min(central+wBase+1,arr.Dimensions().Max(i));
+			lowerIndex[i]=std::max(central-wBase,  this->arr.Dimensions().Min(i));
+			upperIndex[i]=std::min(central+wBase+1,this->arr.Dimensions().Max(i));
 		}
 	}
 
@@ -96,9 +96,24 @@ double Interpolation::Interpolator<N>::Eval(const typename Array<N>::point& pnt)
 		w=CalcWeight(idx,pnt);
 		if(w==0)continue;
 		sumW+=w;
-		result+=w*arr(idx);
+		result+=w*this->arr(idx);
 	}
 	if(sumW!=0)result/=sumW;
 	return result;
+}
+
+
+template<size_t N>
+double Interpolation::WeightBased<N>::CalcWeight(
+	const typename Array<N>::index &idx, 
+	const typename Array<N>::point &pnt)
+{
+	double w=1;
+	for(size_t i=0; i<N; ++i){
+		int low=this->arr.Dimensions().Min(i);
+		int hig=this->arr.Dimensions().Max(i);
+		w*=W(idx[i],pnt[i],{low,hig});
+	}
+	return w;
 }
 #endif

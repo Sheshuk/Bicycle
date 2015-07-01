@@ -1,6 +1,6 @@
 
 #include "RootUtils.h"
-
+#include "Interpolator.h"
 Axis make_Axis(const TAxis& a){return Axis(a.GetNbins(),a.GetXmin(),a.GetXmax());}
 
 TGraph   make_TGraph(const Table<1>& table){
@@ -8,7 +8,7 @@ TGraph   make_TGraph(const Table<1>& table){
 	graf.SetName("1dim graph");
 	unsigned n=0;
 	for (auto x:Axis::Values(table.GetAxis(0))){
-		graf.SetPoint(n++,x,table.At({x}));
+		graf.SetPoint(n++,x,table.Eval<Interpolation::Nearest>({x}));
 	}
 	return graf;
 };
@@ -19,7 +19,7 @@ TGraph2D make_TGraph2D(const Table<2>& flux){
 	unsigned n=0;
 	for (auto x:Axis::Values(flux.GetAxis(0))){
 		for (auto y:Axis::Values(flux.GetAxis(1))){
-			graf.SetPoint(n++,x,y,flux.At({x,y}));
+			graf.SetPoint(n++,x,y,flux.Eval<Interpolation::Nearest>({x,y}));
 		}
 	}
 	return graf;
@@ -29,7 +29,7 @@ TH1D     make_TH1D(const Table<1> &flux, const char* title){
 	const Axis &ax=flux.GetAxis(0);
 	TH1D hist("h1d",title,ax.Nbins(),ax.Min(),ax.Max());
 	for(auto nx:Axis::Bins(ax))
-			hist.SetBinContent(nx+1,flux.At({ax(nx)}));
+			hist.SetBinContent(nx+1,flux.Eval<Interpolation::Nearest>({ax(nx)}));
 	return hist;
 };
 TH2D     make_TH2D(const Table<2> &flux, const char* title){
@@ -38,7 +38,7 @@ TH2D     make_TH2D(const Table<2> &flux, const char* title){
 	TH2D hist("h2d",title,ax.Nbins(),ax.Min(),ax.Max(),ay.Nbins(),ay.Min(),ay.Max());
 	for(auto nx:Axis::Bins(ax))
 		for(auto ny:Axis::Bins(ay)){
-			hist.SetBinContent(nx+1,ny+1,flux.At({ax(nx),ay(ny)}));
+			hist.SetBinContent(nx+1,ny+1,flux.Eval<Interpolation::Nearest>({ax(nx),ay(ny)}));
 		}
 	return hist;
 }
@@ -51,7 +51,7 @@ TH3D     make_TH3D(const Table<3> &flux, const char* title){
 	for(auto nx:Axis::Bins(ax))
 		for(auto ny:Axis::Bins(ay))
 			for(auto nz:Axis::Bins(az)){
-				hist.SetBinContent(nx+1,ny+1,nz+1,flux.At({ax(nx),ay(ny),az(nz)}));
+				hist.SetBinContent(nx+1,ny+1,nz+1,flux.Eval<Interpolation::Nearest>({ax(nx),ay(ny),az(nz)}));
 			}
 	return hist;
 }

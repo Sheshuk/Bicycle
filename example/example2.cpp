@@ -1,6 +1,7 @@
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "RootUtils.h"
+#include "Interpolator.h"
 #include "Timer.h"
 
 int main(int argc, char const *argv[])
@@ -26,7 +27,7 @@ int main(int argc, char const *argv[])
 	for(auto&& x : Axis::Values(ax1)){
 		for(auto&& y : Axis::Values(ay1)){
 			std::array<double,2> pnt={x,y};
-			table1.SetPoint(pnt,table0.Nearest(pnt));
+			table1.SetPoint(pnt,table0.Eval<Interpolation::Nearest>(pnt));
 		}
 	}
 
@@ -35,7 +36,7 @@ int main(int argc, char const *argv[])
 	for(auto&& x : Axis::Values(ax1)){
 		for(auto&& y : Axis::Values(ay1)){
 			std::array<double,2> pnt={x,y};
-			table2.SetPoint(pnt,table0.Linear(pnt));
+			table2.SetPoint(pnt,table0.Eval<Interpolation::Linear>(pnt));
 		}
 	}
 
@@ -44,7 +45,7 @@ int main(int argc, char const *argv[])
 	for(auto&& x : Axis::Values(ax1)){
 		for(auto&& y : Axis::Values(ay1)){	
 			std::array<double,2> pnt={x,y};
-			table3.SetPoint(pnt,table0.Lagrange(pnt));
+			table3.SetPoint(pnt,table0.Eval<Interpolation::Lagrange>(pnt));
 		}
 	}
 

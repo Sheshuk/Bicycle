@@ -2,7 +2,6 @@
 #define TABLET__H value
 #include "Axis.h"
 #include "ArrayT.h"
-#include "Interpolator.h"
 #include <array>
 
 template<size_t N>
@@ -21,20 +20,8 @@ public:
 	Table(const Axes& Ax):axes(Ax),array(axesSizes(Ax)){};
 	~Table(){};
 
-	double At (const point &pnt)const{return Nearest(pnt);}
-	
-	double Nearest (const point &pnt)const{
-		return array.Nearest(TransformToLocal(pnt));
-	};
-	double Linear(const point &pnt)const{
-		return (Interpolation::Linear<N>(array)).Eval(TransformToLocal(pnt));
-	};
-	double Lagrange(const point &pnt)const{
-		return (Interpolation::Lagrange<N>(array)).Eval(TransformToLocal(pnt));
-	};
-	double IDW(const point &pnt)const{
-		return (Interpolation::IDW<N>(array)).Eval(TransformToLocal(pnt));
-	};
+	template<template<size_t>class T> double Eval(const point &pnt)const {return T<N>(array).Eval(TransformToLocal(pnt));}
+
 	point TransformToLocal (const point& pnt) const{
 		point pntLocal;
 		for (size_t i = 0; i < N; ++i)pntLocal[i]=axes[i].IdxFromVal(pnt[i]);
@@ -53,7 +40,6 @@ private:
 	Axes axes;
 	Array<N> array;
 };
-#endif
 
 template<size_t N>
 typename Table<N>::index Table<N>::axesSizes(const Table<N>::Axes& axes) {
@@ -61,3 +47,4 @@ typename Table<N>::index Table<N>::axesSizes(const Table<N>::Axes& axes) {
 	for (size_t i = 0; i < N; ++i)result[i]=axes[i].Nbins();
 	return result;
 }
+#endif

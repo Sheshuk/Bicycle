@@ -57,7 +57,7 @@ TEST (test_Array, ForLoop_Index){
 	
 	Array<3> array({2,3,4});
 	for(auto& idx: array.Dimensions()){
-		printf("idx=%ld %ld %ld\n",idx[0],idx[1],idx[2]);
+		printf("idx=%d %d %d\n",idx[0],idx[1],idx[2]);
 		ASSERT_NO_THROW(array(idx));
 	}
 }
@@ -65,9 +65,9 @@ TEST (test_Array, ForLoop_Index){
 
 TEST (test_Array, OutOfRange_exception){
 	Array<3> array3d({100,20,3});
-	ASSERT_THROW(array3d({1,1,100}),MR_out_of_range);
-	ASSERT_THROW(array3d({1,100,1}),MR_out_of_range);
-	ASSERT_THROW(array3d({100,1,1}),MR_out_of_range);
+	ASSERT_THROW(array3d({1,1,100}),MR_IdxOutOfRange);
+	ASSERT_THROW(array3d({1,100,1}),MR_IdxOutOfRange);
+	ASSERT_THROW(array3d({100,1,1}),MR_IdxOutOfRange);
 	ASSERT_NO_THROW(array3d({99,1,1}));
 }
 
@@ -91,10 +91,11 @@ TEST (test_Array, BigArrayLoop_index){
 }
 
 TEST (test_Array, Copy){
-	Array<3> arr1({1000,100,100});
+	Array<3> arr1({100,100,100});
+	printf("Array length=%ld\n",arr1.Length());
 	auto length=arr1.Length();
-	arr1({10,10,10})=300;
-	Array<3> arr2=(arr1);
+	arr1({10,10,10})=300
+;	Array<3> arr2=(arr1);
 	arr2({10,10,11})=200;
 
 	ASSERT_EQ(length,arr1.Length());
@@ -106,7 +107,8 @@ TEST (test_Array, Copy){
 }
 
 TEST (test_Array, Move){
-	Array<3> arr1({1000,100,100});
+	Array<3> arr1({100,100,100});
+	printf("Array length=%ld\n",arr1.Length());
 	auto length=arr1.Length();
 	arr1({10,10,10})=300;
 	Array<3> arr2=(std::move(arr1));

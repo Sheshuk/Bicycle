@@ -1,6 +1,7 @@
 #include "TCanvas.h"
 #include "TMultiGraph.h"
 #include "RootUtils.h"
+#include "Interpolator.h"
 int main(int argc, char const *argv[])
 {	
 	Axis ax0({20, 0,20});
@@ -15,10 +16,10 @@ int main(int argc, char const *argv[])
 	Table<1> tableLag({ax1});
 	Table<1> tableIDW({ax1});
 	for(auto&& x : Axis::Values(ax1)) {
-		tableNrs.SetPoint({x},table0.Nearest ({x}));
-		tableLin.SetPoint({x},table0.Linear  ({x}));
-		tableLag.SetPoint({x},table0.Lagrange({x}));
-		tableIDW.SetPoint({x},table0.IDW({x}));
+		tableNrs.SetPoint({x},table0.Eval<Interpolation::Nearest >({x}));
+		tableLin.SetPoint({x},table0.Eval<Interpolation::Linear  >({x}));
+		tableLag.SetPoint({x},table0.Eval<Interpolation::Lagrange>({x}));
+		tableIDW.SetPoint({x},table0.Eval<Interpolation::IDW     >({x}));
 	}
 
 	TGraph g0=make_TGraph(table0);

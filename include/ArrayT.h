@@ -32,8 +32,7 @@ public:
 		other.data=0; other.length=0;
 	}
 
-	double Nearest(const point& pnt) const;
-	double Eval(const point& pnt, std::function<double(int, double)> w=0, int width=0) const;
+	double Eval(const point& pnt) const;
 	
 	inline size_t Length()   const {return length;}
 	inline int Size(size_t Naxis) const {return dimension[Naxis];}
@@ -75,7 +74,7 @@ typename Array<N>::point point(const typename Array<N>::index &idx){
 }
 
 template<size_t N>
-double Array<N>::Nearest(const point& pnt) const{
+double Array<N>::Eval(const point& pnt) const{
 	index pnt0;
 	for (size_t i = 0; i < N; ++i)
 		pnt0[i]=round(pnt[i]);
@@ -92,39 +91,6 @@ double Array<N>::operator*(const Array<N> other) const{
 	return result;
 }
 
-
-/**
- * @brief general interpolation method
- * @details Calculate interpolated value in point pnt, using weight function, provided by user
- * 
- * @param pnt Point where we need to get value
- * @param w Function double w(size_t n, double x), which calculates 
- * the weight of node n for point with coordinate x. This function is used for each axis
- * 
- * @return interpolated value
- */
-template<size_t N>
-double Array<N>::Eval(const point& pnt, std::function<double(int, double)> w, int base) const{
-	if(w==0)return Nearest(pnt);
-	
-	index lowerIndex,upperIndex;
-	for (size_t i = 0; i < N; ++i){
-		int central=round(pnt[i]);
-		lowerIndex[i]=std::max(central-base,0);
-		upperIndex[i]=std::min(central+base+1,dimension[i]);
-	}
-	
-	double result=0;
-	for(auto &idx: Array<N>::Dimension(lowerIndex,upperIndex)){
-		double weight=1;
-		for(size_t i=0;i<N;++i){
-			weight*=w(idx[i],pnt[i]);
-			// if(weight==0)break;
-		}
-		if(weight)result+=weight*Value(idx);
-	}
-	return result;
-}
 
 
 #endif

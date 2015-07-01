@@ -2,6 +2,7 @@
 #include "TStyle.h"
 #include "TFile.h"
 #include "RootUtils.h"
+#include "Interpolator.h"
 #include "MCSampler.h"
 #include <fstream>
 #include <functional>
@@ -40,13 +41,13 @@ Table<2> ReadHonda(const char* path){
 
 
 double PdfFromTable_N(const MCSampler<2>::Point &p,Table<2>* table){
-    return table->Nearest(p);
+    return table->Eval<Interpolation::Nearest>(p);
     // return table->Linear(p);
 }
 
 double PdfFromTable_L(const MCSampler<2>::Point &p,Table<2>* table){
-    // return table->Nearest(p);
-    return table->Linear(p);
+    // return table->Eval<Interpolation::Nearest>(p);
+    return table->Eval<Interpolation::Linear>(p);
 }
 
 int main(int argc, char const *argv[])
@@ -64,7 +65,7 @@ int main(int argc, char const *argv[])
     TH2D h_2("hmc","mcFlux linear;  P_mu, GeV; cos#theta_{zenith}",200,hondaFlux.Min(0),hondaFlux.Max(0),200,hondaFlux.Min(1),hondaFlux.Max(1));
 
     ///---- generate 10000 MC points ----------
-    const size_t Npoint=1000;
+    const size_t Npoint=10000;
     double pmax=hondaFlux.MaxValue();
 
     MCSampler <2> sampler_n(std::bind(PdfFromTable_N, _1, &hondaFlux),{{0.0,0.0},{5.0,1.0}});
