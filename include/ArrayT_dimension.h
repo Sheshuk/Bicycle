@@ -35,6 +35,8 @@ public:
 	size_t Length() const {return length;}
 	iterator begin() const{return iterator(*this,lower,0);}
 	iterator end()   const{return iterator(*this,upper,length);}
+	const index& lowerLimits() const{return lower;}
+	const index& upperLimits() const{return upper;}
 private:
 	index sizes;  //upper index limits 
 	index lower;  //lower index limits
