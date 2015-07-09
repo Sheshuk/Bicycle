@@ -5,6 +5,7 @@
 /**
  * @brief virtual interpolator class
  */	
+
 namespace Interpolation{
 
 	template<size_t N>
@@ -70,11 +71,11 @@ namespace Interpolation{
 			return result;
 		};
 	};
-}
+
 //----------------------------------------------------
 //Methods definition:
 template<size_t N>
-double Interpolation::WeightBased<N>::Eval(const typename Array<N>::point& pnt){
+double WeightBased<N>::Eval(const typename Array<N>::point& pnt){
 	typename Array<N>::index lowerIndex,upperIndex;
 	for (size_t i = 0; i < N; ++i){
 		if(wBase<0){
@@ -104,7 +105,7 @@ double Interpolation::WeightBased<N>::Eval(const typename Array<N>::point& pnt){
 
 
 template<size_t N>
-double Interpolation::WeightBased<N>::CalcWeight(
+double WeightBased<N>::CalcWeight(
 	const typename Array<N>::index &idx, 
 	const typename Array<N>::point &pnt)
 {
@@ -115,5 +116,6 @@ double Interpolation::WeightBased<N>::CalcWeight(
 		w*=W(idx[i],pnt[i],{low,hig});
 	}
 	return w;
+}
 }
 #endif

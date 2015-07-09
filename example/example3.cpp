@@ -40,12 +40,12 @@ Table<2> ReadHonda(const char* path){
 }
 
 
-double PdfFromTable_N(const MCSampler<2>::Point &p,Table<2>* table){
+double PdfFromTable_N(const MCSampler<2>::point &p,Table<2>* table){
     return table->Eval<Interpolation::Nearest>(p);
     // return table->Linear(p);
 }
 
-double PdfFromTable_L(const MCSampler<2>::Point &p,Table<2>* table){
+double PdfFromTable_L(const MCSampler<2>::point &p,Table<2>* table){
     // return table->Eval<Interpolation::Nearest>(p);
     return table->Eval<Interpolation::Linear>(p);
 }
@@ -73,7 +73,7 @@ int main(int argc, char const *argv[])
     timer1.Update();
     for(size_t n=0;n<Npoint;++n){
         if(n%(Npoint/100)==0){printf("."); fflush(stdout);}
-        MCSampler<2>::Point r=sampler_n.GenPoint(pmax);
+        MCSampler<2>::point r=sampler_n.GenPoint(pmax);
         h_1.Fill(r[0],r[1]);
     }
     printf("!\n");
@@ -84,7 +84,7 @@ int main(int argc, char const *argv[])
     timer1.Update();
     for(size_t n=0;n<Npoint;++n){
         if(n%(Npoint/100)==0){printf("."); fflush(stdout);}
-        MCSampler<2>::Point r=sampler_l.GenPoint(pmax);
+        MCSampler<2>::point r=sampler_l.GenPoint(pmax);
         h_2.Fill(r[0],r[1]);
     }
     printf("!\n");

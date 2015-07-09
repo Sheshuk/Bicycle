@@ -9,11 +9,11 @@ template <size_t N>
 class FunctionSpace
 {
 public:
-    using Point=std::array<double,N>;
+    using point=std::array<double,N>;
 public:
-    FunctionSpace(Point LowerLim, Point UpperLim):p0(LowerLim),p1(UpperLim){};
-    Point Uniform(std::default_random_engine &generator){
-        Point r;
+    FunctionSpace(point LowerLim, point UpperLim):p0(LowerLim),p1(UpperLim){};
+    point Uniform(std::default_random_engine &generator){
+        point r;
         for(size_t i=0;i<N;++i){
             std::uniform_real_distribution<double> distr(p0[i],p1[i]);
             r[i]=distr(generator);
@@ -21,8 +21,8 @@ public:
         return r;
     }
 
-    Point Gauss(std::default_random_engine &generator){
-        Point r;
+    point Gauss(std::default_random_engine &generator){
+        point r;
         for(size_t i=0;i<N;++i){
             std::uniform_real_distribution<double> distr(p0[i],p1[i]);
             r[i]=distr(generator);
@@ -30,15 +30,15 @@ public:
         return r;
     }
 protected:
-    Point p0,p1;
+    point p0,p1;
 };
 
 template <size_t N>
 class MCSampler
 {
 public:
-    using Point=std::array<double,N>;
-    using Pdf=std::function<double(const Point&)>;
+    using point=std::array<double,N>;
+    using Pdf=std::function<double(const point&)>;
     using Space=FunctionSpace<N>;
 public:
     MCSampler(Pdf PdfFun, Space Lims):pdf(PdfFun),limits(Lims){
@@ -50,9 +50,9 @@ public:
         Nkeep=Ntry=0;
     }
 
-    Point GenPoint(double pmax=1.0){
+    point GenPoint(double pmax=1.0){
         std::uniform_real_distribution<double> distr(0,pmax);
-        Point r;
+        point r;
         double a;
         do{
             r=limits.Uniform(generator);

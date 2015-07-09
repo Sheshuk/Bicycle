@@ -11,7 +11,7 @@ public:
 	using Axes=std::array<Axis,N>;
 	using point=std::array<double,N>;
 	using index=std::array<int,N>;
-private:
+public:
 	static index axesSizes(const Axes&);
 	static point axesMin(const Axes&);
 	static point axesMax(const Axes&);
@@ -22,11 +22,8 @@ public:
 
 	template<template<size_t>class T> double Eval(const point &pnt)const {return T<N>(array).Eval(TransformToLocal(pnt));}
 
-	point TransformToLocal (const point& pnt) const{
-		point pntLocal;
-		for (size_t i = 0; i < N; ++i)pntLocal[i]=axes[i].IdxFromVal(pnt[i]);
-			return pntLocal;
-	}
+	point TransformToLocal (const point& pnt) const;
+	point TransformToGlobal (const point& pnt) const;
 	inline unsigned Nbins(size_t dim) const{return axes[dim].Nbins();}
 	inline double  Min(size_t dim) const {return axes[dim].Min();}
 	inline double  Max(size_t dim) const {return axes[dim].Max();}
@@ -47,4 +44,18 @@ typename Table<N>::index Table<N>::axesSizes(const Table<N>::Axes& axes) {
 	for (size_t i = 0; i < N; ++i)result[i]=axes[i].Nbins();
 	return result;
 }
+
+template<size_t N>
+typename Table<N>::point Table<N>::TransformToLocal (const typename Table<N>::point& pnt) const{
+		typename Table<N>::point result;
+		for (size_t i = 0; i < N; ++i)result[i]=axes[i].IdxFromVal(pnt[i]);
+			return result;
+	}
+
+template<size_t N>
+typename Table<N>::point Table<N>::TransformToGlobal (const typename Table<N>::point& pnt) const{
+		typename Table<N>::point result;
+		for (size_t i = 0; i < N; ++i)result[i]=axes[i].ValFromIdx(pnt[i]);
+			return result;
+	}
 #endif
