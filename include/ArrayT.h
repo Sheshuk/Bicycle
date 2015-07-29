@@ -32,17 +32,13 @@ public:
 		other.data=0; other.length=0;
 	}
 
-	double Eval(const point& pnt) const;
-	
 	inline size_t Length()   const {return length;}
 	inline int Size(size_t Naxis) const {return dimension[Naxis];}
 	inline const Dimension& Dimensions()const{return dimension;}
 	inline double& operator ()(const index& Idx)      {return Value(Idx);}
 	inline double  operator ()(const index& Idx) const{return Value(Idx);}
-	inline double& AtPoint(const point& Pnt)      {return Value(Pnt);}
 
 	inline size_t Position (const index& Idx)const{return dimension.PosFromIdx(Idx);}
-	inline size_t PositionP(const point& Idx)const{return dimension.PosFromPnt(Idx);}
 	inline index  Index(size_t Pos) const{return dimension.IdxFromPos(Pos);}
 
 	double MaxValue(){auto m=data[0]; for(auto &e: *this) m=std::max(m,e); return m;}
@@ -54,7 +50,7 @@ public:
 	double operator*(const Array<N> other) const;
 protected:
 	double& Value(const index& Idx) const{return data[Position (Idx)];}
-	double& Value(const point& Pnt) const{return data[PositionP(Pnt)];}
+
 protected:	
 	const Dimension dimension;
 	size_t length;
@@ -74,14 +70,6 @@ typename Array<N>::point point(const typename Array<N>::index &idx){
 }
 
 template<size_t N>
-double Array<N>::Eval(const point& pnt) const{
-	index pnt0;
-	for (size_t i = 0; i < N; ++i)
-		pnt0[i]=round(pnt[i]);
-	return Value(pnt0);
-}
-
-template<size_t N>
 double Array<N>::operator*(const Array<N> other) const{
 	if(length!=other.length)throw MR_length_mismatch(length,other.length);
 	double result=0;
@@ -90,7 +78,6 @@ double Array<N>::operator*(const Array<N> other) const{
 	}
 	return result;
 }
-
 
 
 #endif

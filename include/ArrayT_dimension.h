@@ -25,7 +25,6 @@ public:
 		}
 	}
 	size_t PosFromIdx(const index& idx) const;
-	size_t PosFromPnt(const point& idx) const;
 	void IdxFromPos(size_t Pos, index& Result) const;
 	index IdxFromPos(size_t Pos) const;
 	
@@ -70,19 +69,6 @@ size_t Array<N>::Dimension::PosFromIdx(const index& idx) const {
 	}
 	return result;
 }
-
-template<size_t N>
-size_t Array<N>::Dimension::PosFromPnt(const point& pnt) const {
-	size_t result=0;
-	for(size_t i = 0; i < N; ++i)
-	{
-		int idx=round(pnt[i]);
-		if(idx<lower[i]||idx>=upper[i])throw MR_IdxOutOfRange(idx,lower[i],upper[i]);
-		result=result*sizes[i]+idx-lower[i];
-	}
-	return result;
-}
-
 
 template<size_t N>
 void Array<N>::Dimension::IdxFromPos(size_t Pos, Array<N>::index& Result) const

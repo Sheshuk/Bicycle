@@ -2,6 +2,7 @@
 #define INTERPOLATOR__H value
 #include <algorithm>
 #include "ArrayT.h"
+#include "ConversionUtils.h"
 /**
  * @brief virtual interpolator class
  */	
@@ -22,7 +23,7 @@ namespace Interpolation{
 	class Nearest: public VirtualInterpolator<N>{
 	public:
 		Nearest(const Array<N>& A):VirtualInterpolator<N>(A){}
-		double Eval(const typename Array<N>::point& pnt) override { return this->arr.Eval(pnt);}
+		double Eval(const typename Array<N>::point& pnt) override { return this->arr(round<N>(pnt));}
 	};
 //------------------------------
 	template<size_t N>
